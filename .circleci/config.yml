@@ -11,8 +11,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Save hello world in an output file"
-          command: return 1
+          name: "a failed run job"
+          command: exit 1
       - run:
           name: "Roll back a failed job"
           command: echo "Error has occured"
