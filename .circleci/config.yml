@@ -16,6 +16,7 @@ jobs:
       - run:
         name: "Roll back a failed job"
         command: echo "Error has occured"
+        when: on_fail
 
 workflows:
   fail-workflow:
