@@ -14,15 +14,13 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - persist_to_workspace:
-          root: /temp/workspace
-          paths:
-            - output.txt
-      - attach_workspace:
-          at: /temp/workspace
       - run:
           name: "Save hello world in an output file"
-          command: echo "Hello, World!" > output.txt
+          command: echo "Hello, World!" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
 
   print-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -34,10 +32,10 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /temp/workspace
+          at: ~/
       - run:
           name: "Print hello world in the output file"
-          command: cat output.txt
+          command: cat ~/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
