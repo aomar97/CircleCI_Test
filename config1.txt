@@ -1,0 +1,59 @@
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+commands:
+  print_pipeline_id:
+      description: "Using command to print the pipeline ID"
+      steps:
+        - run: echo "the pipeline Id is $CIRCLE_WORKFLOW_ID "
+
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  save-helloworld-output:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    <<: *defaults
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run:
+          name: "Save hello world in an output file"
+          command: echo "Hello, World!" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
+      - print_pipeline_id
+
+  print-helloworld-output:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    <<: *defaults
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: "Print hello world in the output file"
+          command: cat ~/output.txt
+      - print_pipeline_id
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  save-hello-workflow:
+    jobs:
+      - save-helloworld-output
+      - print-helloworld-output:
+          requires:
+            - save-helloworld-output
