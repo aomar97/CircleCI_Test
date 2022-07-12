@@ -15,11 +15,11 @@ jobs:
     steps:
       - checkout
       - persist_to_workspace:
-          root: /tmp/dir
+          root: /temp/workspace
           paths:
             - output.txt
       - attach_workspace:
-          at: /tmp/workspace
+          at: /temp/workspace
       - run:
           name: "Save hello world in an output file"
           command: echo "Hello, World!" > output.txt
@@ -34,7 +34,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /temp/workspace
       - run:
           name: "Print hello world in the output file"
           command: cat output.txt
