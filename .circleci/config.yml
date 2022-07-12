@@ -14,9 +14,9 @@ jobs:
           name: "Save hello world in an output file"
           command: return 1
       - run:
-        name: "Roll back a failed job"
-        command: echo "Error has occured"
-        when: on_fail
+          name: "Roll back a failed job"
+          command: echo "Error has occured"
+          when: on_fail
 
 workflows:
   fail-workflow:
