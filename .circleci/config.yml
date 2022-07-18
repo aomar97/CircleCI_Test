@@ -28,12 +28,23 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
+      - run:
+          name: "output ip in inventory.txt"
+          command: |
+            echo "[all]" > ~/inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --profile default --region us-east-1 --output text >> ~/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - inventory.txt
 
   configure_infrastructure: 
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - add_ssh_keys:
               # You can get this ID in the section where you registered the SSH Key
               fingerprints: ["23:24:49:13:1b:30:35:ca:53:53:a7:a6:c3:44:ac:35"] 
@@ -44,7 +55,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i inventory.txt main-remote.yml
+            ansible-playbook -i ~/inventory.txt main-remote.yml
   save-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -82,8 +93,10 @@ jobs:
 workflows:
   save-hello-workflow:
     jobs:
-      #- create_infrastructure
-      - configure_infrastructure
+      - create_infrastructure
+      - configure_infrastructure:
+          requires:
+            - create_infrastructure
       - save-helloworld-output:
           requires:
             - configure_infrastructure
