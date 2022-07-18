@@ -1,0 +1,24 @@
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
+
+version: 2.1
+
+jobs:
+  fail-job:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: "a failed run job"
+          command: exit 1
+      - run:
+          name: "Roll back a failed job"
+          command: echo "Error has occured"
+          when: on_fail
+
+workflows:
+  fail-workflow:
+    jobs:
+      - fail-job
