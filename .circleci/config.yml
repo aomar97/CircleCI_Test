@@ -32,8 +32,8 @@ jobs:
       - run:
           name: "output ip in inventory.txt"
           command: |
-            echo "[all]" > ~/inventory.txt
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ~/inventory.txt
+            echo "[all]" > inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
