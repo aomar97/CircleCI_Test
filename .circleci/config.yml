@@ -28,6 +28,23 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
+
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+              # You can get this ID in the section where you registered the SSH Key
+              fingerprints: ["23:24:49:13:1b:30:35:ca:53:53:a7:a6:c3:44:ac:35"] 
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory.txt main.yml
   save-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -65,11 +82,12 @@ jobs:
 workflows:
   save-hello-workflow:
     jobs:
-      - create_infrastructure
+      #- create_infrastructure
+    - configure_infrastructure
       - save-helloworld-output:
           requires:
-            - create_infrastructure
+            - configure_infrastructure
       - print-helloworld-output:
           requires:
             - save-helloworld-output
-            
+
