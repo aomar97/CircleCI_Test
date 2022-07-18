@@ -32,7 +32,7 @@ jobs:
           name: "output ip in inventory.txt"
           command: |
             echo "[all]" > ~/inventory.txt
-            sudo aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --profile default --region us-east-1 --output text >> ~/inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ~/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
