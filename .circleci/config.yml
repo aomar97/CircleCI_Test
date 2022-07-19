@@ -48,7 +48,7 @@ jobs:
 #          at: ~/
       - add_ssh_keys:
               # You can get this ID in the section where you registered the SSH Key
-              fingerprints: ["23:24:49:13:1b:30:35:ca:53:53:a7:a6:c3:44:ac:35"] 
+          fingerprints: ["23:24:49:13:1b:30:35:ca:53:53:a7:a6:c3:44:ac:35"] 
       - run:
           name: Install Ansible
           command: |
@@ -94,13 +94,13 @@ jobs:
 workflows:
   save-hello-workflow:
     jobs:
-      #- create_infrastructure
-      - configure_infrastructure
+      - create_infrastructure
+      #- configure_infrastructure
       #    requires:
       #      - create_infrastructure
       - save-helloworld-output:
           requires:
-            - configure_infrastructure
+            - create_infrastructure
       - print-helloworld-output:
           requires:
             - save-helloworld-output
