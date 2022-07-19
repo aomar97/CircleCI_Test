@@ -125,11 +125,13 @@ workflows:
       #- configure_infrastructure
       #    requires:
       #      - create_infrastructure
-      - save-helloworld-output:
+      #- save-helloworld-output:
+      #    requires:
+      #      - create_infrastructure
+      #- print-helloworld-output:
+      #    requires:
+      #      - save-helloworld-output
+      - smoke_test:
           requires:
             - create_infrastructure
-      - print-helloworld-output:
-          requires:
-            - save-helloworld-output
-      - smoke_test
 
