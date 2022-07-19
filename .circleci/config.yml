@@ -57,6 +57,23 @@ jobs:
           name: Run Playbook and Configure server
           command: |
             ansible-playbook -i inventory.txt main-remote.yml
+
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
   save-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -95,13 +112,14 @@ workflows:
   save-hello-workflow:
     jobs:
       #- create_infrastructure
-      - configure_infrastructure
+      #- configure_infrastructure
       #    requires:
       #      - create_infrastructure
-      - save-helloworld-output:
-          requires:
-            - configure_infrastructure
+      - save-helloworld-output
+      #    requires:
+      #      - configure_infrastructure
       - print-helloworld-output:
           requires:
             - save-helloworld-output
+      - smoke_test
 
