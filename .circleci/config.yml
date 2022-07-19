@@ -71,18 +71,19 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
-      - run: apk add --update curl
+      #- run: apk add --update curl
       - run:
           name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 1
-            else
-              return 1
-            fi
+          command: return 1
+          #command: |
+          #  URL="https://blog.udacity.com/"
+          #  # Test if website exists
+          #  if curl -s --head ${URL} 
+          #  then
+          #    return 1
+          #  else
+          #    return 1
+          #  fi
       - destroy_environment
   save-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
