@@ -11,6 +11,15 @@ commands:
       description: "Using command to print the pipeline ID"
       steps:
         - run: echo "the pipeline Id is $CIRCLE_WORKFLOW_ID "
+  destroy_environment:
+     steps:
+       - run:
+           name: Destroy environment
+           # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+           when: on_fail
+           command: |
+             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
 
 
 # Define a job to be invoked later in a workflow.
@@ -70,10 +79,11 @@ jobs:
             # Test if website exists
             if curl -s --head ${URL} 
             then
-              return 0
+              return 1
             else
               return 1
             fi
+      - destroy_environment
   save-helloworld-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -111,13 +121,13 @@ jobs:
 workflows:
   save-hello-workflow:
     jobs:
-      #- create_infrastructure
+      - create_infrastructure
       #- configure_infrastructure
       #    requires:
       #      - create_infrastructure
-      - save-helloworld-output
-      #    requires:
-      #      - configure_infrastructure
+      - save-helloworld-output:
+          requires:
+            - create_infrastructure
       - print-helloworld-output:
           requires:
             - save-helloworld-output
