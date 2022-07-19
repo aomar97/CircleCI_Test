@@ -94,13 +94,13 @@ jobs:
 workflows:
   save-hello-workflow:
     jobs:
-      - create_infrastructure
-      #- configure_infrastructure
+      #- create_infrastructure
+      - configure_infrastructure
       #    requires:
       #      - create_infrastructure
       - save-helloworld-output:
           requires:
-            - create_infrastructure
+            - configure_infrastructure
       - print-helloworld-output:
           requires:
             - save-helloworld-output
