@@ -1,12 +1,27 @@
+global:
+  resolve_timeout: 1m
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
 route:
-  group_by: [Alertname]
-  receiver: email-me
+  receiver: 'gmail-notifications'
 
 receivers:
-- name: email-me
+- name: 'gmail-notifications'
   email_configs:
-  - to: ahmed.mohamed_97@yahoo.com
-    from: azmo96@yahoo.com
+  - to: azmo96@gmail.com
+    from: azmo96@gmail.com
     smarthost: smtp.gmail.com:587
-    auth_username: azmo96
+    auth_username: azmo96@gmail.com
+    auth_identity: azmo96@gmail.com
     auth_password: kogpwuicbmnxknwa
+    send_resolved: true
+
+route:
+  group_by: [Alertname]
+  receiver: 'team-1'
+
+receivers:
+- name: 'team-1'
+  slack_configs:
+  - 
+    channel: '#alert'
