@@ -10,7 +10,7 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets: # state the target public dns u want to set an alert on
-      - localhost:9093
+      - ['ec2-34-205-4-95.compute-1.amazonaws.com:9093']
 
 scrape_configs:
   - job_name: 'prometheus'

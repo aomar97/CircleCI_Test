@@ -5,9 +5,8 @@ route:
 receivers:
 - name: email-me
   email_configs:
-  - to: EMAIL_YO_WANT_TO_SEND_EMAILS_TO
-    from: YOUR_EMAIL_ADDRESS
+  - to: ahmed.mohamed_97@yahoo.com
+    from: azmo96@yahoo.com
     smarthost: smtp.gmail.com:587
-    auth_username: azmo96@gmail.com
-    auth_identity: azmo96@gmail.com
+    auth_username: azmo96
     auth_password: kogpwuicbmnxknwa
