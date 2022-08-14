@@ -7,5 +7,16 @@ groups:
     labels:
       severity: 'critical'
     annotations:
-      summary: "Instance  is down"
-      description: " of job  has been down for more than 1 minute."
+      summary: "Instance is down"
+      description: " Instance has been down for more than 1 minute."
+
+- name: Low CPU usage
+  rules:
+  - alert: HostLowCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) < 20
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host low CPU load (instance {{ $labels.instance }})
+      description: "CPU load is <20%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
